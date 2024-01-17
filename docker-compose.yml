@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    networks:
+      - db
+    env_file:
+      - .env
+    ports:
+      - 27017:27017
+    volumes:
+      - gallery:/data/db
+  api:
+    build: .
+    ports:
+      - ${APP_PORT}:3000
+    # command: npm run start:dev
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    networks:
+      - db
+volumes:
+  gallery:
+networks:
+  db:
+    driver: bridge
